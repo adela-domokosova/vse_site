@@ -15,8 +15,7 @@ pipeline{
 
         stage ('Build Stage') {
             steps{
-                sh './mvn clean package -DskipTests'
-                sh 'ls -lah target/'
+                sh 'mvn clean package -DskipTests'
             }
         }
 
