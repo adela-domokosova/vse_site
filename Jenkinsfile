@@ -9,7 +9,7 @@ pipeline{
     stages{
     stage('Checkout') {
                 steps {
-                    git 'https://github.com/adela-domokosova/vse_site.git'
+                    git branch: 'main', url: 'https://github.com/adela-domokosova/vse_site.git'
                 }
             }
 
