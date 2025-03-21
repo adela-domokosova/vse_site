@@ -1,0 +1,70 @@
+<!-- potvrzení platby-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Confirmation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-b from-green-100 to-green-300 min-h-screen flex flex-col font-sans">
+
+<header class="bg-black text-white fixed top-0 w-full shadow-md z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center py-3">
+        <div class="text-xl font-extrabold bg-gradient-to-r from-green-700 to-green-500 bg-clip-text text-transparent">
+            V$Epage
+        </div>
+        <nav class="flex space-x-6 items-center">
+            <a href="home" class="text-white hover:bg-gray-700 px-4 py-2 rounded transition">Home</a>
+            <a onclick="location.href='scoreboard'" class="text-white hover:bg-gray-700 px-4 py-2 rounded transition">Scoreboard</a>
+            <a href="about" class="text-white hover:bg-gray-700 px-4 py-2 rounded transition">About</a>
+            <button onclick="location.href='selectPixels'" class="text-white hover:bg-gray-700 px-4 py-2 rounded transition">
+                Buy Pixels
+            </button>
+            <a href="info" class="text-white hover:bg-gray-700 px-4 py-2 rounded transition">Profile</a>
+            <form th:action="@{/logout}" method="post" class="inline">
+                <button type="submit"
+                        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                    Logout
+                </button>
+            </form>
+        </nav>
+    </div>
+</header>
+
+<main class="flex-grow pt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl font-bold text-gray-800 mb-6">Payment Confirmation</h1>
+        <p class="text-lg text-gray-700 mb-4">Your payment was successful.</p>
+        <p class="text-lg text-gray-700 mb-6">Total price: <span id="amount" class="font-semibold"></span> CZK</p>
+        <div class="flex justify-center space-x-4">
+            <a href="/orderRecap" class="px-4 py-2 bg-blue-600 text-white rounded shadow-md transition hover:bg-blue-700">
+                Back to changes overview
+            </a>
+            <button onclick="location.href='home'" type="button" class="px-4 py-2 bg-green-600 text-white rounded shadow-md transition hover:bg-green-700">
+                Home
+            </button>
+        </div>
+    </div>
+</main>
+
+<footer class="bg-black text-white text-center py-4">
+    &copy; 2025 V$Epage. All rights reserved.
+</footer>
+
+<script>
+    window.onload = function () {
+        // Načteme cenu z localStorage nebo z backendu
+        let amount = localStorage.getItem('amount') || 'Price unknown';
+        document.getElementById('amount').innerText = amount;
+    };
+
+    document.addEventListener("DOMContentLoaded", function() {
+        localStorage.removeItem('changedCells');
+        localStorage.removeItem('changedCellsCount');
+    });
+</script>
+
+</body>
+</html>
+

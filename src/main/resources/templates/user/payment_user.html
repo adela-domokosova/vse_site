@@ -1,0 +1,97 @@
+<!-- formulář pro platbu-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Gateway</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-b from-green-100 to-green-300 min-h-screen flex flex-col font-sans">
+
+<header class="bg-black text-white fixed top-0 w-full shadow-md z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center py-3">
+        <div class="text-xl font-extrabold bg-gradient-to-r from-green-700 to-green-500 bg-clip-text text-transparent">
+            V$Epage
+        </div>
+        <nav class="flex space-x-6 items-center">
+            <a href="home" class="text-white hover:bg-gray-700 px-4 py-2 rounded transition">Home</a>
+            <a onclick="location.href='scoreboard'" class="text-white hover:bg-gray-700 px-4 py-2 rounded transition">Scoreboard</a>
+            <a href="about" class="text-white hover:bg-gray-700 px-4 py-2 rounded transition">About</a>
+            <button onclick="location.href='selectPixels'" class="text-white hover:bg-gray-700 px-4 py-2 rounded transition">
+                Buy Pixels
+            </button>
+            <a href="info" class="text-white hover:bg-gray-700 px-4 py-2 rounded transition">Profile</a>
+            <form th:action="@{/logout}" method="post" class="inline">
+                <button type="submit"
+                        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                    Logout
+                </button>
+            </form>
+        </nav>
+    </div>
+</header>
+
+<main class="flex-grow pt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-4xl font-bold text-gray-800 mb-6 text-center">Payment Gateway</h1>
+
+        <!-- Formulář pro platební bránu -->
+        <form action="/user/payment/process" method="POST" class="bg-white p-6 rounded-lg shadow-md mx-auto" style="width: 800px;">
+            <div class="mb-4">
+                <label for="name" class="block text-gray-700 font-bold mb-2">Name</label>
+                <input type="text" id="name" name="name" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+            </div>
+
+            <div class="mb-4">
+                <label for="cardNumber" class="block text-gray-700 font-bold mb-2">Card Number</label>
+                <input type="text" id="cardNumber" name="cardNumber" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+            </div>
+
+            <div class="mb-4">
+                <label for="expirationDate" class="block text-gray-700 font-bold mb-2">Expiration</label>
+                <input type="text" id="expirationDate" name="expirationDate" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+            </div>
+
+            <div class="mb-4">
+                <label for="cvv" class="block text-gray-700 font-bold mb-2">CVV</label>
+                <input type="text" id="cvv" name="cvv" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+            </div>
+
+            <div class="mb-4">
+                <label for="amount" class="block text-gray-700 font-bold mb-2">Total Price</label>
+                <input type="text" id="amount" name="amount" value="" readonly class="w-full px-3 py-2 border rounded-lg bg-gray-100">
+            </div>
+
+            <input type="hidden" id="changedCells" name="changedCells" value="">
+
+            <div class="flex justify-center space-x-4">
+                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded shadow-md transition hover:bg-green-700">
+                    Confirm Payment
+                </button>
+                <button onclick="location.href='home'" type="button" class="px-4 py-2 bg-red-600 text-white rounded shadow-md transition hover:bg-red-700">
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<footer class="bg-black text-white text-center py-4">
+    &copy; 2025 V$Epage. All rights reserved.
+</footer>
+
+<script>
+    window.onload = () => {
+        const changedCellsCount = localStorage.getItem('changedCellsCount');
+        if (changedCellsCount) {
+            document.getElementById('amount').value = changedCellsCount;
+        }
+
+        const savedChanges = JSON.parse(localStorage.getItem('changedCells')) || {};
+        document.getElementById('changedCells').value = JSON.stringify(savedChanges);
+    };
+</script>
+
+</body>
+</html>

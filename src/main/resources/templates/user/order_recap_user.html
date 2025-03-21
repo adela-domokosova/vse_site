@@ -1,0 +1,115 @@
+<!--zobrazuje se potom, co user na mřížce vybarví libovolné pixely. zobrazí seznam ve kterém je na každém řádku
+ pozice pixelu řádek x sloupec a barva, kterou je vybarven. Na konci je cena kolik to bude stát.-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Changes Overview</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-b from-green-100 to-green-300 min-h-screen flex flex-col font-sans">
+
+<header class="bg-black text-white fixed top-0 w-full shadow-md z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center py-3">
+    <div class="text-xl font-extrabold bg-gradient-to-r from-green-700 to-green-500 bg-clip-text text-transparent">
+      V$Epage
+    </div>
+    <nav class="flex space-x-6 items-center">
+      <a href="home" class="text-white hover:bg-gray-700 px-4 py-2 rounded transition">Home</a>
+      <a onclick="location.href='scoreboard'" class="text-white hover:bg-gray-700 px-4 py-2 rounded transition">Scoreboard</a>
+      <a href="about" class="text-white hover:bg-gray-700 px-4 py-2 rounded transition">About</a>
+      <button onclick="location.href='selectPixels'" class="text-white hover:bg-gray-700 px-4 py-2 rounded transition">
+        Buy Pixels
+      </button>
+      <a href="info" class="text-white hover:bg-gray-700 px-4 py-2 rounded transition">Profile</a>
+      <form th:action="@{/logout}" method="post" class="inline">
+        <button type="submit"
+                class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+          Logout
+        </button>
+      </form>
+    </nav>
+  </div>
+</header>
+
+<main class="flex-grow pt-20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h1 class="text-4xl font-bold text-gray-800 mb-6 text-center">Changes Overview</h1>
+
+    <!-- Tabulka s přehledem změn -->
+    <div class="overflow-x-auto">
+      <table class="min-w-auto bg-white shadow-md rounded-lg overflow-hidden mx-auto" id="overviewTable" style="width: 500px;">
+        <thead class="bg-gray-200">
+        <tr>
+          <th class="py-2 px-4 border-b">Row</th>
+          <th class="py-2 px-4 border-b">Column</th>
+          <th class="py-2 px-4 border-b">Color</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Generování přehledu změn -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Řádek pro zobrazení ceny nákupu -->
+    <div class="mt-6 text-center">
+      <p class="text-lg font-semibold">Total purchase price: <span id="priceValue">0</span></p>
+    </div>
+
+    <!-- Tlačítko pro potvrzení a přechod na platební bránu -->
+    <div class="flex justify-center mt-6 space-x-4">
+      <button onclick="confirmChanges()" class="px-4 py-2 bg-green-600 text-white rounded shadow-md transition hover:bg-green-700">
+        Confirm
+      </button>
+      <button onclick="location.href='home'" type="button" class="px-4 py-2 bg-red-600 text-white rounded shadow-md transition hover:bg-red-700">
+        Cancel
+      </button>
+    </div>
+  </div>
+</main>
+
+<footer class="bg-black text-white text-center py-4">
+  &copy; 2025 V$Epage. All rights reserved.
+</footer>
+
+<script>
+  window.onload = () => {
+    const overviewTable = document.getElementById('overviewTable').getElementsByTagName('tbody')[0];
+    const savedChanges = JSON.parse(localStorage.getItem('changedCells')) || {};
+
+    // Počet změněných buněk
+    const changedCellsCount = Object.keys(savedChanges).length;
+
+    // Uložení počtu změněných buněk do localStorage
+    localStorage.setItem('changedCellsCount', changedCellsCount);
+
+    localStorage.setItem('amount', changedCellsCount);
+
+    // Zobrazení počtu změněných buněk jako ceny nákupu
+    document.getElementById('priceValue').innerText = changedCellsCount;
+
+    // Vygenerování tabulky změn
+    for (const [key, color] of Object.entries(savedChanges)) {
+      const [row, col] = key.split(',');
+      const rowElement = overviewTable.insertRow();
+      const cellElement1 = rowElement.insertCell();
+      const cellElement2 = rowElement.insertCell();
+      const cellElement3 = rowElement.insertCell();
+
+      cellElement1.innerText = row;
+      cellElement2.innerText = col;
+      cellElement3.style.backgroundColor = color;
+    }
+  };
+
+  // Funkce pro potvrzení změn a přechod na platební stránku
+  function confirmChanges() {
+    // Přesměrování na novou stránku /user/paymentGateway
+    window.location.href = '/user/paymentGateway';
+  }
+</script>
+
+</body>
+</html>

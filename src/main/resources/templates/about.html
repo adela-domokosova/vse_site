@@ -1,0 +1,51 @@
+<!-- homepage přihlášeného admina -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - V$Epage</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-b from-green-100 to-green-300 min-h-screen flex flex-col font-sans">
+
+<header class="bg-black text-white fixed top-0 w-full shadow-md z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center py-3">
+        <div class="text-xl font-extrabold bg-gradient-to-r from-green-700 to-green-500 bg-clip-text text-transparent">
+            V$Epage
+        </div>
+        <nav class="flex space-x-6">
+            <a href="home" class="text-white hover:bg-gray-700 px-4 py-2 rounded transition">Home</a>
+            <a href="scoreboard" type="button" class="text-white hover:bg-gray-700 px-4 py-2 rounded transition">Scoreboard</a>
+            <a href="about" class="text-white hover:bg-gray-700 px-4 py-2 rounded transition">About</a>
+            <a onclick="location.href='registration'" class="text-white hover:bg-gray-700 px-4 py-2 rounded transition">Sign Up</a>
+            <a onclick="location.href='loginform'" class="text-white hover:bg-gray-700 px-4 py-2 rounded transition">Login</a>
+        </nav>
+    </div>
+</header>
+
+<main class="flex-grow pt-20">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-4xl font-bold text-gray-800 mb-6 text-center">About V$Epage</h1>
+        <p class="text-lg text-gray-600 mb-4">
+            Welcome to our unique pixel art project inspired by the legendary "The Million Dollar Homepage", which was created exclusively for the community of students of Prague University of Economics and Business in Prague (VSE)!
+        </p>
+        <p class="text-lg text-gray-600 mb-4">
+            Our website consists of a digital canvas with limited number of pixels, where you can buy each pixel for a symbolic price of 1 CZK per month. These pixels can then be colored to create colorful images, texts or patterns that will be displayed on our homepage. It is a space for students to showcase their creativity, and at the same time a competitive spirit among the VSE faculties will develop.
+        </p>
+        <p class="text-lg text-gray-600 mb-4">
+            What's the catch?
+            Each pixel purchase is temporary - after the end of the selected period, the funds will be donated to the students of the faculty with the most active teaching (tracked on our scoreboard). It's an interesting way to combine creativity, friendly rivalry and community support!
+        </p>
+        <p class="text-lg text-gray-600">
+            Are you ready to paint your own story? Make every pixel count!
+        </p>
+    </div>
+</main>
+
+<footer class="bg-black text-white text-center py-4">
+    &copy; 2025 V$Epage. All rights reserved.
+</footer>
+
+</body>
+</html>

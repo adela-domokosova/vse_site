@@ -1,0 +1,177 @@
+<!-- výběr pixelů -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mřížka</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: visible;
+        }
+        #loading-overlay.hidden {
+            visibility: hidden;
+        }
+        .loading-text {
+            color: white;
+            font-size: 2em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-green-100 to-green-300 min-h-screen flex flex-col font-sans">
+
+<header class="bg-black text-white fixed top-0 w-full shadow-md z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center py-3">
+        <div class="text-xl font-extrabold bg-gradient-to-r from-green-700 to-green-500 bg-clip-text text-transparent">
+            V$Epage
+        </div>
+        <nav class="flex space-x-6 items-center">
+            <a href="home" class="text-white hover:bg-gray-700 px-4 py-2 rounded transition">Home</a>
+            <a onclick="location.href='scoreboard'" class="text-white hover:bg-gray-700 px-4 py-2 rounded transition">Scoreboard</a>
+            <a href="about" class="text-white hover:bg-gray-700 px-4 py-2 rounded transition">About</a>
+            <button onclick="location.href='selectPixels'" class="text-white hover:bg-gray-700 px-4 py-2 rounded transition">
+                Buy Pixels
+            </button>
+            <a href="info" class="text-white hover:bg-gray-700 px-4 py-2 rounded transition">Profile</a>
+            <form th:action="@{/logout}" method="post" class="inline">
+                <button type="submit"
+                        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                    Logout
+                </button>
+            </form>
+        </nav>
+    </div>
+</header>
+
+<div id="loading-overlay">
+    <div class="loading-text">Loading...</div>
+</div>
+
+<main class="flex-grow pt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-4xl font-bold text-gray-800 mb-6 text-center">Grid</h1>
+        <div class="grid grid-cols-10 mb-6 mx-auto" id="grid" style="width: 480px;">
+            <!-- Generování buněk mřížky -->
+            <script>
+                for (let row = 0; row < 10; row++) {
+                    for (let col = 0; col < 10; col++) {
+                        document.write(`<div id="cell-${row}-${col}" class="w-12 h-12 border border-gray-300 shadow-sm bg-white" onmousedown="startChanging(${row}, ${col})" onmouseover="changeCellOnHover(${row}, ${col})" onmouseup="stopChanging()"></div>`);
+                    }
+                }
+            </script>
+        </div>
+
+        <!-- Paleta barev -->
+        <div class="flex justify-center mb-6">
+            <div class="w-10 h-10 m-1 cursor-pointer rounded border border-gray-300 shadow-sm" style="background-color: red;" onclick="setColor('red')"></div>
+            <div class="w-10 h-10 m-1 cursor-pointer rounded border border-gray-300 shadow-sm" style="background-color: blue;" onclick="setColor('blue')"></div>
+            <div class="w-10 h-10 m-1 cursor-pointer rounded border border-gray-300 shadow-sm" style="background-color: green;" onclick="setColor('green')"></div>
+            <div class="w-10 h-10 m-1 cursor-pointer rounded border border-gray-300 shadow-sm" style="background-color: yellow;" onclick="setColor('yellow')"></div>
+            <div class="w-10 h-10 m-1 cursor-pointer rounded border border-gray-300 shadow-sm" style="background-color: orange;" onclick="setColor('orange')"></div>
+            <div class="w-10 h-10 m-1 cursor-pointer rounded border border-gray-300 shadow-sm" style="background-color: purple;" onclick="setColor('purple')"></div>
+            <div class="w-10 h-10 m-1 cursor-pointer rounded border border-gray-300 shadow-sm bg-gray-500" onclick="setColor('erase')"></div>
+        </div>
+
+        <div class="flex justify-center">
+            <button id="saveButton" onclick="saveChanges()" class="px-4 py-2 text-lg bg-green-600 text-white rounded shadow-md transition hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed">
+                Go to changes overview
+            </button>
+        </div>
+    </div>
+</main>
+
+<footer class="bg-black text-white text-center py-4">
+    &copy; 2025 V$Epage. All rights reserved.
+</footer>
+
+<script>
+    let changedCells = {};
+    let currentColor = 'red';
+    let isMouseDown = false;
+
+    function setColor(color) {
+        currentColor = color;
+    }
+
+    function startChanging(row, col) {
+        isMouseDown = true;
+        changeCellColor(row, col);
+    }
+
+    function changeCellOnHover(row, col) {
+        if (isMouseDown) {
+            changeCellColor(row, col);
+        }
+    }
+
+    function stopChanging() {
+        isMouseDown = false;
+    }
+
+    function changeCellColor(row, col) {
+        const cell = document.querySelector(`#cell-${row}-${col}`);
+
+        if (currentColor === 'erase') {
+            // Vygumování buňky
+            cell.style.backgroundColor = '';
+            delete changedCells[`${row},${col}`];
+        } else {
+            // Změna barvy buňky
+            cell.style.backgroundColor = currentColor;
+            changedCells[`${row},${col}`] = currentColor;
+        }
+        updateSaveButtonState();
+    }
+
+    function saveChanges() {
+        localStorage.setItem('changedCells', JSON.stringify(changedCells));
+        window.location.href = 'orderRecap';
+    }
+
+    function updateSaveButtonState() {
+        const saveButton = document.getElementById('saveButton');
+        if (Object.keys(changedCells).length === 0) {
+            saveButton.disabled = true;
+        } else {
+            saveButton.disabled = false;
+        }
+    }
+
+    window.onload = async () => {
+        updateSaveButtonState();
+        try {
+            //načítání barev pixelů z DB při načítání stránky
+            const response = await fetch('/grid/colors');
+            const savedChanges = await response.json();
+            console.log(savedChanges);
+            for (const [key, color] of Object.entries(savedChanges)) {
+                const [row, col] = key.split(',');
+                const cell = document.querySelector(`#cell-${row}-${col}`);
+                cell.style.backgroundColor = color;
+
+                if (color !== "#FFFFFF") {
+                    cell.classList.add('disabled');
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching grid colors:', error);
+        } finally {
+            document.getElementById('loading-overlay').classList.add('hidden');
+        }
+    };
+</script>
+
+</body>
+</html>

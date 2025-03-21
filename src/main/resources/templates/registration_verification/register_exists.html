@@ -1,0 +1,34 @@
+<!-- stránka, která se ukáže v případě, že uživatel už je registrovaný-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Already Registered - V$Epage</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-b from-green-100 to-green-300 min-h-screen flex flex-col justify-center items-center font-sans">
+
+<main class="flex-grow flex items-center justify-center">
+    <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
+        <h1 class="text-3xl font-bold text-red-600 text-center mb-4">Registration Error</h1>
+        <p class="text-lg text-gray-800 text-center mb-6">This email is already registered.</p>
+        <div class="text-center">
+            <a href="/loginform"
+               class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                Go to Login
+            </a>
+            <a href="/registration"
+               class="ml-4 bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                Register with a Different Email
+            </a>
+        </div>
+    </div>
+</main>
+
+<footer class="bg-black text-white text-center py-4">
+    &copy; 2025 V$Epage. All rights reserved.
+</footer>
+
+</body>
+</html>

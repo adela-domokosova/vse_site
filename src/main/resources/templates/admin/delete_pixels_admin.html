@@ -1,0 +1,377 @@
+<!-- úprava pixelů adminem (odmazávání pixelů) a banování userů-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mřížka</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Flex container to split the page into two halves */
+        .container {
+            display: flex;
+            justify-content: center; /* Horizontální zarovnání na střed */
+            align-items: center;
+            gap: 20px; /* Přidání mezery mezi levým a pravým panelem */
+            height: auto; /* Dynamická výška podle obsahu */
+            padding: 20px;
+        }
+
+        /* Left side (grid) */
+        .grid-container {
+            flex: 2;
+            max-width: 600px;
+            height: auto;
+            padding: 20px;
+            overflow: auto; /* Povolit scrollování v případě potřeby */
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(10, 50px);
+            grid-template-rows: repeat(10, 50px);
+        }
+
+        .cell {
+            width: 50px;
+            height: 50px;
+            border: 1px solid black;
+        }
+
+        /* Pravá strana -> dynamický výpis uživatelů */
+        .user-list-container {
+            flex: 1;
+            max-width: 300px;
+            height: auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow-y: auto; /* Scrollování, pokud je potřeba */
+        }
+
+        .user-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+        button {
+            padding: 5px 10px;
+            margin-left: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            background-color: #f8f8f8;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            line-height: 30px;
+            text-align: center;
+
+        }
+
+        button:hover {
+            background-color: #e0e0e0;
+            border-color: #bbb;
+        }
+
+        /* Navbar a jeho odstup od obsahu */
+        header {
+            height: 60px; /* Výška navbaru */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 50;
+        }
+
+        body {
+            padding-top: 60px;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Poloprůhledná šedá */
+            z-index: 1000; /* Nad všemi ostatními prvky */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: visible; /* Viditelný při načítání */
+        }
+
+        #loading-overlay.hidden {
+            visibility: hidden;
+        }
+
+        .loading-text {
+            color: white;
+            font-size: 2em;
+            font-weight: bold;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+        }
+
+    </style>
+</head>
+<body class="bg-gradient-to-b from-green-100 to-green-300 min-h-screen flex flex-col font-sans">
+<header class="bg-black text-white fixed top-0 w-full shadow-md z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center py-3">
+        <div class="text-xl font-extrabold bg-gradient-to-r from-green-700 to-green-500 bg-clip-text text-transparent">
+            V$Epage
+        </div>
+        <nav class="flex space-x-6">
+            <a href="home" class="text-white hover:bg-gray-700 px-4 py-2 rounded transition">Home</a>
+            <form th:action="@{/logout}" method="post" class="inline">
+                <button type="submit"
+                        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                    Logout
+                </button>
+            </form>
+        </nav>
+    </div>
+</header>
+<div id="loading-overlay">
+    <div class="loading-text">Loading...</div>
+</div>
+<h1>Grid</h1>
+
+<!-- Flex container for the grid and user list -->
+<div class="container">
+    <!-- Left side: Grid -->
+    <div class="grid-container">
+        <div class="grid" id="grid">
+            <!-- Generování buněk mřížky -->
+            <script>
+                for (let row = 0; row < 10; row++) {
+                    for (let col = 0; col < 10; col++) {
+                        document.write(`<div id="cell-${row}-${col}" class="cell" onmousedown="startChanging(${row}, ${col})" onmouseover="changeCellOnHover(${row}, ${col})" onmouseup="stopChanging()"></div>`);
+                    }
+                }
+            </script>
+        </div>
+
+        <button class="user-item" onclick="sendRequest()">Save</button>
+    </div>
+
+    <!-- Right side: User list -->
+    <div class="user-list-container">
+        <h3>Users</h3>
+        <div id="user-list">
+            <!-- Dynamically generated list of users will appear here -->
+        </div>
+    </div>
+</div>
+<footer class="bg-black text-white text-center py-4">
+    &copy; 2025 V$Epage. All rights reserved.
+</footer>
+
+<script>
+    let changedCells = {};
+    let currentColor = 'white'; // Default color
+    let isMouseDown = false; // Flag for tracking mouse down event
+
+    function setColor(color) {
+        currentColor = color;
+    }
+
+    function startChanging(row, col) {
+        isMouseDown = true;
+        changeCellColor(row, col); // Apply color immediately on mouse down
+    }
+
+    function changeCellOnHover(row, col) {
+        if (isMouseDown) {
+            changeCellColor(row, col); // Apply color when hovering with mouse down
+        }
+    }
+
+    function stopChanging() {
+        isMouseDown = false; // Stop changing when mouse button is released
+    }
+
+    function changeCellColor(row, col) {
+        const cell = document.querySelector(`#cell-${row}-${col}`);
+
+        if (currentColor === 'erase') {
+            cell.style.backgroundColor = '';
+            cell.innerText = '';
+            delete changedCells[`${row},${col}`];
+        } else {
+            cell.style.backgroundColor = currentColor;
+            cell.innerText = '';
+            changedCells[`${row},${col}`] = currentColor;
+        }
+    }
+
+    function createBanButton(name) {
+        const banButton = document.createElement('button');
+        banButton.textContent = "Ban User";
+        banButton.style.marginRight = "5px";
+        banButton.onclick = () => banUser(name, "1");
+        return banButton;
+    }
+
+    function createUnbanButton(name) {
+        const unbanButton = document.createElement('button');
+        unbanButton.textContent = "Unban User";
+        unbanButton.style.marginRight = "5px";
+        unbanButton.onclick = () => banUser(name, "2");
+        return unbanButton;
+    }
+
+    // Funkce pro ban/unban uživatele
+    function banUser(name, num) {
+        fetch('/admin/ban', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username: name, number: num }),
+        })
+            .then(response => {
+                if (response.ok) {
+                    const userDiv = document.querySelector(`#user-${name}`);
+                    if (userDiv) {
+                        const spanName = userDiv.querySelector('span');
+                        let button = userDiv.querySelector('button');
+
+                        if (num === "1") {
+                            // Ban user
+                            alert(`User with ID ${name} has been banned.`);
+                            if (spanName) spanName.textContent = `${name}`;
+
+                            // Nahrazení tlačítka Unban tlačítkem
+                            const unbanButton = createUnbanButton(name);
+                            if (button) {
+                                userDiv.replaceChild(unbanButton, button);
+                            }
+                        } else {
+                            // Unban user
+                            alert(`User with ID ${name} has been unbanned.`);
+                            if (spanName) spanName.textContent = name;
+
+                            // Nahrazení tlačítka Ban tlačítkem
+                            const banButton = createBanButton(name);
+                            if (button) {
+                                userDiv.replaceChild(banButton, button);
+                            }
+                        }
+                    }
+                } else {
+                    alert('Failed to ban/unban the user.');
+                }
+            })
+            .catch(error => {
+                console.error('Error banning/unbanning the user:', error);
+            });
+    }
+
+    // Inicializace uživatelů
+    window.onload = async () => {
+        const loadingOverlay = document.getElementById('loading-overlay');
+        try {
+            const response = await fetch('/grid/colorsusers');
+            const savedChanges = await response.json();
+            const userListDiv = document.getElementById('user-list');
+            const existingUsers = new Set();
+
+            for (const [key, data] of Object.entries(savedChanges)) {
+                const [row, col] = key.split(',');
+                const [color, name, role] = data.split(', ');
+                const cell = document.querySelector(`#cell-${row}-${col}`);
+
+                // Nastavení barvy buňky
+                cell.style.backgroundColor = color;
+
+                // Přidání jména uživatele do buňky
+                if (name !== "null") {
+                    cell.innerText = name;
+                    cell.style.color = "black";
+                    cell.style.textAlign = "center";
+                    cell.style.fontSize = "12px";
+
+                    // Přidání uživatele do seznamu, pokud ještě neexistuje
+                    if (!existingUsers.has(name)) {
+                        const userDiv = document.createElement('div');
+                        userDiv.classList.add('user-item');
+                        userDiv.id = `user-${name}`;
+
+                        // Jméno uživatele
+                        const nameSpan = document.createElement('span');
+                        nameSpan.textContent = name;
+                        nameSpan.style.marginRight = "10px";
+
+                        // Tlačítko podle role
+                        const button =
+                            role === "BANNED"
+                                ? createUnbanButton(name)
+                                : createBanButton(name);
+
+                        // Přidání prvků do userDiv
+                        userDiv.appendChild(nameSpan);
+                        userDiv.appendChild(button);
+
+                        // Přidání do userListDiv
+                        userListDiv.appendChild(userDiv);
+                        existingUsers.add(name);
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching grid colors:', error);
+        } finally {
+            loadingOverlay.classList.add('hidden');
+        }
+    };
+    async function sendRequest() {
+        try {
+            const response = await fetch('/admin/pixels/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(changedCells),
+            });
+            const result = await response.json();
+            if (result.redirect) {
+                window.location.href = result.redirect; // Redirect to "/admin/home"
+            } else {
+                console.log("No redirect, response:", result);
+            }
+        } catch (error) {
+            console.error('Error saving changes:', error);
+        }
+    }
+
+</script>
+
+</body>
+</html>

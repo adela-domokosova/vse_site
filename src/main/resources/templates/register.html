@@ -1,0 +1,79 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - V$Epage</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        function validateForm() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            if (password !== confirmPassword) {
+                document.getElementById('error-message').textContent = "Passwords do not match.";
+                return false;
+            }
+            document.getElementById('error-message').textContent = "";
+            return true;
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-b from-green-100 to-green-300 min-h-screen flex flex-col items-center justify-center font-sans">
+
+<header class="bg-black text-white w-full fixed top-0 left-0 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center py-3">
+        <div class="text-xl font-extrabold bg-gradient-to-r from-green-700 to-green-500 bg-clip-text text-transparent">
+            V$Epage
+        </div>
+    </div>
+</header>
+
+<div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg mt-16">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Register</h1>
+    <form th:action="@{/register}" method="post" class="space-y-6" onsubmit="return validateForm()">
+        <div>
+            <label for="email" class="block text-lg font-medium text-gray-700">Email:</label>
+            <input type="email" id="email" name="email" pattern="[a-zA-Z]{4}[0-9]{2}@vse\.cz" title="Email must start with four letters, followed by two numbers, and end with '@vse.cz'."
+                   oninvalid="this.setCustomValidity('Enter your email in the correct format: xxxx##@vse.cz, where xxxx are letters and ## are numbers.')"
+                   oninput="this.setCustomValidity('')"
+                   required
+                   class="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 text-lg">
+        </div>
+        <div>
+            <label for="password" class="block text-lg font-medium text-gray-700">Password:</label>
+            <input type="password" id="password" name="password" minlength="8"
+                   title="Password must contain at least 8 characters."
+                   oninvalid="this.setCustomValidity('Password must contain at least 8 characters.')"
+                   oninput="this.setCustomValidity('')" required
+                   class="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 text-lg">
+        </div>
+        <div>
+            <label for="confirmPassword" class="block text-lg font-medium text-gray-700">Confirm Password:</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required
+                   class="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 text-lg">
+        </div>
+        <div id="error-message" class="text-red-600 text-lg font-medium"></div>
+        <div>
+            <label for="faculty" class="block text-lg font-medium text-gray-700">University Faculty:</label>
+            <select id="faculty" name="faculty" required
+                    class="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 text-lg">
+                <option value="FFU">FFU</option>
+                <option value="FMV">FMV</option>
+                <option value="FPH">FPH</option>
+                <option value="FIS">FIS</option>
+                <option value="NF">NF</option>
+                <option value="FM">FM</option>
+            </select>
+        </div>
+        <button type="submit"
+                class="w-full bg-green-600 text-white py-3 rounded-md text-lg font-medium hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+            Register
+        </button>
+    </form>
+    <div th:if="${param.error}" class="mt-4" style="display: none;" id="error-notification">
+        <p class="text-red-600 text-lg font-medium">Invalid email or password.</p>
+    </div>
+</div>
+
+</body>
+</html>
+
