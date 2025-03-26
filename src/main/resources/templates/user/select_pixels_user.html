@@ -153,7 +153,7 @@
         updateSaveButtonState();
         try {
             //načítání barev pixelů z DB při načítání stránky
-            const response = await fetch('/grid/colors');
+            const response = await fetch('/gridColors');
             const savedChanges = await response.json();
             console.log(savedChanges);
             for (const [key, color] of Object.entries(savedChanges)) {

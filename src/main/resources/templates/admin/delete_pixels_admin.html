@@ -298,7 +298,7 @@
     window.onload = async () => {
         const loadingOverlay = document.getElementById('loading-overlay');
         try {
-            const response = await fetch('/grid/colorsusers');
+            const response = await fetch('/gridColorsUsers');
             const savedChanges = await response.json();
             const userListDiv = document.getElementById('user-list');
             const existingUsers = new Set();
@@ -353,7 +353,7 @@
     };
     async function sendRequest() {
         try {
-            const response = await fetch('/admin/pixels/save', {
+            const response = await fetch('/admin/saveDelete', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

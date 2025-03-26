@@ -111,7 +111,7 @@
         document.getElementById('loading-overlay').classList.add('hidden');
     }
 
-    fetch('/grid/colors')
+    fetch('/gridColors')
         .then(response => response.json())
         .then(data => renderGrid(data))
         .catch(error => {

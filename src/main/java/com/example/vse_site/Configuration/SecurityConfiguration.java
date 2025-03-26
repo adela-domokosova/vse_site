@@ -26,9 +26,9 @@ public class SecurityConfiguration{
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.authorizeHttpRequests(registry -> {
                     registry.requestMatchers("/unverified").hasRole("UNVERIFIED");
-                    registry.requestMatchers("/home", "/register/**", "/loginform", "/registration/**", "/verify/**", "/facultyCounts", "/scoreboard", "/grid/colors", "/about").permitAll();
+                    registry.requestMatchers("/home", "/register/**", "/loginform", "/registration/**", "/verify/**", "/facultyCounts", "/scoreboard", "/gridColors", "/about").permitAll();
                     registry.requestMatchers("/banned", "/logout").hasRole("BANNED");
-                    registry.requestMatchers("/admin/**", "/logout", "/grid/colorsusers").hasRole("ADMIN");
+                    registry.requestMatchers("/admin/**", "/logout", "/gridColorsUsers").hasRole("ADMIN");
                     registry.requestMatchers("/user/**", "/logout").hasRole("USER");
                     registry.anyRequest().authenticated();
 

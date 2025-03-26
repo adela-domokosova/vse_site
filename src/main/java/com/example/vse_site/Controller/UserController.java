@@ -77,17 +77,17 @@ public class UserController {
         return "user/select_pixels_user"; // Název šablony HTML stránky, např. gridPage.html
     }
 
-    @GetMapping("/order/recap")
+    @GetMapping("/orderRecap")
     public String handleRecap(){
         return "user/order_recap_user";
     }
 
-    @GetMapping("/payment/gateway")
+    @GetMapping("/paymentGateway")
     public String handlePaymentGateway(){
         return "user/payment_user";
     }
 
-    @GetMapping("/payment/confirmation")
+    @GetMapping("/paymentConfirmation")
     public String handlePaymentConfirmation(){
         return "user/payment_confirmation_user";
     }
@@ -116,7 +116,7 @@ public class UserController {
             return "userNotFound";
         }}
 
-    @PostMapping("/payment/process")
+    @PostMapping("/processPayment")
     public String processPayment(@RequestParam("cardNumber") String cardNumber,
                                  @RequestParam("expirationDate") String expirationDate,
                                  @RequestParam("cvv") String cvv,
@@ -217,7 +217,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/password/change")
+    @PostMapping("/changePassword")
     public String changePassword(@RequestParam("currentPassword") String currentPassword,
                                  @RequestParam("newPassword") String newPassword,
                                  Model model) {

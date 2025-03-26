@@ -50,7 +50,7 @@ public class ContentController {
             return "registration_verification/verify_fail";
         }
     }
-    @GetMapping("/verify/password/change")
+    @GetMapping("/verify/passwordChange")
     public String verifyPasswordChange(@Param("code") String code) {
         if (service.verifyChangePassword(code)) {
             System.out.println("yay");
@@ -66,13 +66,13 @@ public class ContentController {
         return "registration_verification/unverified";
     }
 
-    @GetMapping("/grid/colors")
+    @GetMapping("/gridColors")
     public ResponseEntity<Map<String, String>> getGridColors() {
         Map<String, String> gridColors = gridCellServices.getGridColors();
         return ResponseEntity.ok(gridColors);
     }
 
-    @GetMapping("/grid/colorsusers")
+    @GetMapping("/gridColorsUsers")
     public ResponseEntity<Map<String, String>> getGridColorsUsers() {
         Map<String, String> gridColors = gridCellServices.getGridColorsandUsers();
         return ResponseEntity.ok(gridColors);

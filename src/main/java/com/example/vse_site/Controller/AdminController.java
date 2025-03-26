@@ -35,7 +35,7 @@ public class AdminController {
         return "admin/home_admin";
     }
 
-    @GetMapping("/pixels/delete")
+    @GetMapping("/deletePixels")
     public String handleDeletePixels(){
         return "admin/delete_pixels_admin";
     }
@@ -57,7 +57,7 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed find user");
         }
     }
-    @PostMapping("/pixels/save")
+    @PostMapping("/saveDelete")
     public ResponseEntity<Map<String, String>> handleSaveDelete(@RequestBody Map<String, String> changedCells){
         for (Map.Entry<String, String> entry : changedCells.entrySet()) {
             String key = entry.getKey();
