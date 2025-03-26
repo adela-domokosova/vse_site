@@ -20,7 +20,7 @@ Uživatelé
 
 Databáze
 Byla použita MySQL databáze, která byla hostována na AWS. V src/main/resources/application.properties je nastaveno připojení k databázi.
-![Původní návrh databáze](https://adela-domokosova.github.io/pictures/uml/db_navrh.png)
+![Původní návrh databáze](https://adela-domokosova.github.io/pictures/vse_page/uml/db_navrh.png)
 
 Entity
 Pro vytvoření databáze nebyly použity scripty, místo toho byla každá tabulka vytvořena jako entity pomocí Spring Data JPA a Hibernate. databáze se generuje podle dat v Entity balíčku, obsahuje tabulku uživatelů, pixelů a transakcí. S databází komunikujeme pomocí Repositories.
@@ -38,7 +38,7 @@ Záměr byl, aby aplikace na backendu měla tři vrstvy, které vzájemně komun
 
 Admin
 Prakticky pro uživatele admina to znamená, že požadavky bude zpracovávat AdminController, Logiku bude brát převážně z GridCellServices a UserServices, které budou komunikovat s databází pomocí GridCellRepository a MyUserRepository.
-![Třívrstvá struktura aplikace pro uživatele admin](https://adela-domokosova.github.io/pictures/uml/admin_classes.png)
+![Třívrstvá struktura aplikace pro uživatele admin](https://adela-domokosova.github.io/pictures/vse_page/uml/admin_classes.png)
 **Zlepšení 1** vrstvi nejsou ve skutečnosti tak strikně oddělené a Controller tak někdy komunikuje přímo s repozitářem. Při této velikosti projektu, to příliš velký problém nebyl, ale při dlouhodobé údržbě webu nebo jeho rozrůstání by se kó stával více nepřehledný a hůže udržovaný.
 **Zlepšení 2** zbytečně vzniklo více Services pro práci s uživatelskými daty
 
